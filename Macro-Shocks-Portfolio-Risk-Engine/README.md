@@ -415,35 +415,6 @@ Minimum coverage targets: **80% unit, 60% integration**. All risk scoring module
 - Read-only data feed credentials; write access isolated to OMS interface module
 - Network egress restricted to approved data vendor endpoints in production
 
----
-
-## Roadmap
-
-### Near-Term (0–3 Months)
-- [ ] Live Bloomberg B-PIPE integration for real-time market context
-- [ ] FinBERT fine-tuning on FOMC transcript corpus
-- [ ] Automated alert routing to Slack/PagerDuty
-- [ ] C# dashboard v1 with live risk heatmap
-
-### Medium-Term (3–9 Months)
-- [ ] Multi-central-bank support (ECB, BOJ, BOE)
-- [ ] Geopolitical event detection (UN, G7/G20, conflict news)
-- [ ] Options-surface-implied scenario probabilities
-- [ ] Real-time portfolio integration via FIX protocol
-
-### Long-Term (9–18 Months)
-- [ ] Reinforcement learning for dynamic hedge sizing
-- [ ] Cross-institution correlation: Fed + ECB simultaneous actions
-- [ ] Alternative data integration (satellite, positioning, flow data)
-- [ ] Automated regime classification with continuous online learning
-
----
-
-## License and Use
-
-**Proprietary and Confidential.** For authorized internal institutional use only. Not for distribution. Contains unpublished proprietary research methodologies.
-
----
 
 *Macro Shock Risk Engine — Quantitative Research & Risk Engineering*  
 *Build with rigor. Hedge with precision. Never mistake noise for signal.*
