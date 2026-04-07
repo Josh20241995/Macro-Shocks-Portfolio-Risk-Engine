@@ -1,4 +1,4 @@
-# Macro Shock Risk Engine
+# Macro Shock Risk Engine 
 ### Asymmetric Policy Event Detection, Pricing, and Portfolio Response System
 
 > **Classification:** Institutional Research & Production Infrastructure  
