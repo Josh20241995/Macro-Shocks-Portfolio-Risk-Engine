@@ -1,0 +1,44 @@
+# python/configs/research.yaml
+# Research environment: local development, no live feeds, synthetic data.
+# Inherits from base.yaml. Override only research-specific values here.
+
+_base: base.yaml
+
+environment: research
+
+pipeline:
+  fail_fast: false
+  stage_timeout_seconds: 60    # More lenient for debugging
+
+nlp:
+  use_transformer: false        # Off by default — install [nlp] extras to enable
+  transformer_timeout_seconds: 30.0
+
+logging:
+  level: DEBUG
+  format: console               # Human-readable in research mode
+  audit_log_dir: /tmp/msre_audit
+
+# Research: no live OMS or alert routing
+oms_endpoint: null
+alert_routing:
+  slack_webhook_url: null
+  pagerduty_integration_key: null
+  oms_alert_endpoint: null
+
+default_alert_routing:
+  CRITICAL: ["log"]
+  HIGH: ["log"]
+  MEDIUM: ["log"]
+  LOW: ["log"]
+
+# Research: looser staleness thresholds (synthetic data has fixed timestamps)
+data_staleness:
+  equity_minutes: 1440          # 24h — research uses historical snapshots
+  yields_minutes: 1440
+  credit_minutes: 1440
+  volatility_minutes: 1440
+
+# Research: expose more verbosity in scores
+risk_scoring:
+  min_data_quality_high_confidence: 0.50   # Lower bar in research

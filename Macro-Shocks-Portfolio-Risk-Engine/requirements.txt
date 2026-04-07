@@ -1,0 +1,26 @@
+# requirements.txt
+# Core runtime dependencies for the Macro Shock Risk Engine.
+# For development dependencies, use: pip install -e ".[dev]"
+# For NLP features: pip install -e ".[nlp]"
+
+# Core data and validation
+pydantic>=2.5
+numpy>=1.26
+pandas>=2.1
+python-dotenv>=1.0
+pyyaml>=6.0
+
+# Structured logging
+structlog>=24.1
+
+# HTTP (for alert routing and OMS interface)
+requests>=2.31
+aiohttp>=3.9
+
+# Optional: market calendar (graceful fallback if unavailable)
+# pandas-market-calendars>=4.4
+
+# Optional: NLP transformer scoring (install separately with [nlp] extra)
+# sentence-transformers>=2.7
+# torch>=2.1
+# transformers>=4.36

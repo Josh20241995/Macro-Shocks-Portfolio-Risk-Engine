@@ -1,0 +1,125 @@
+# python/configs/base.yaml
+# Base configuration for Macro Shock Risk Engine.
+# All environment-specific configs inherit and override these values.
+# Do not store secrets here — use environment variables or Vault.
+
+system:
+  name: "macro-shock-risk-engine"
+  version: "1.0.0"
+
+environment: research  # Override in env-specific configs
+
+# ---------------------------------------------------------------------------
+# Pipeline Configuration
+# ---------------------------------------------------------------------------
+pipeline:
+  fail_fast: false
+  max_stage_retries: 1
+  stage_timeout_seconds: 30
+
+# ---------------------------------------------------------------------------
+# Event Detection
+# ---------------------------------------------------------------------------
+event_detection:
+  min_severity_score: 15.0
+  after_hours_severity_boost: 15.0
+  weekend_severity_boost: 25.0
+  emergency_severity_boost: 35.0
+
+# ---------------------------------------------------------------------------
+# NLP Configuration
+# ---------------------------------------------------------------------------
+nlp:
+  use_transformer: false           # Set true in staging/production with GPU
+  transformer_model: "all-MiniLM-L6-v2"
+  transformer_timeout_seconds: 10.0
+  ensemble_transformer_weight: 0.25
+
+# ---------------------------------------------------------------------------
+# Market Vulnerability Calibration
+# ---------------------------------------------------------------------------
+vulnerability_calibration:
+  vix: [12.0, 15.0, 18.5, 25.0, 35.0]
+  hy_spread_bps: [250, 320, 420, 550, 700]
+  ig_spread_bps: [50, 70, 100, 140, 190]
+  bid_ask_spread_bps: [0.5, 1.0, 1.5, 3.0, 6.0]
+  ted_spread_bps: [10, 15, 25, 45, 80]
+
+# ---------------------------------------------------------------------------
+# Risk Scoring
+# ---------------------------------------------------------------------------
+risk_scoring:
+  min_data_quality_high_confidence: 0.75
+
+# ---------------------------------------------------------------------------
+# Alert Thresholds
+# ---------------------------------------------------------------------------
+alert_thresholds:
+  composite_score:
+    CRITICAL: 75.0
+    HIGH: 55.0
+    MEDIUM: 35.0
+    LOW: 15.0
+  weekend_gap_risk_score:
+    CRITICAL: 70.0
+    HIGH: 50.0
+    MEDIUM: 30.0
+  liquidity_risk_score:
+    CRITICAL: 75.0
+    HIGH: 55.0
+  volatility_risk_score:
+    CRITICAL: 70.0
+    HIGH: 50.0
+  monday_gap_estimate_pct:
+    CRITICAL: -4.0
+    HIGH: -2.5
+    MEDIUM: -1.5
+  trading_halt_probability:
+    CRITICAL: 0.10
+    HIGH: 0.05
+
+# ---------------------------------------------------------------------------
+# Pre-Trade Risk Checks
+# ---------------------------------------------------------------------------
+pre_trade_checks:
+  max_single_hedge_notional_pct: 0.15
+  max_gross_exposure_reduction_pct: 0.50
+  allowed_instruments:
+    - "SPX_PUT"
+    - "SPX_PUT_SPREAD"
+    - "CDX_HY"
+    - "TY_FUTURES"
+    - "ZB_FUTURES"
+    - "TU_FUTURES"
+    - "VIX_CALL"
+    - "DXY_FUTURES"
+    - "GOLD_FUTURES"
+
+# ---------------------------------------------------------------------------
+# Backtesting
+# ---------------------------------------------------------------------------
+backtesting:
+  pre_event_lookback_days: 30
+  train_fraction: 0.70
+  transaction_costs:
+    base_equity_slippage_bps: 5.0
+    base_futures_slippage_bps: 1.5
+    base_options_slippage_bps: 20.0
+    base_credit_slippage_bps: 10.0
+
+# ---------------------------------------------------------------------------
+# Data Staleness Limits (minutes)
+# ---------------------------------------------------------------------------
+data_staleness:
+  equity_minutes: 15
+  yields_minutes: 30
+  credit_minutes: 60
+  volatility_minutes: 30
+
+# ---------------------------------------------------------------------------
+# Logging
+# ---------------------------------------------------------------------------
+logging:
+  level: INFO
+  format: json
+  audit_log_dir: logs/audit

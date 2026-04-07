@@ -1,0 +1,50 @@
+# python/configs/production.yaml
+# Production environment configuration.
+# Inherits from base.yaml; override only production-specific values.
+# Secrets are NEVER stored here — use environment variables or HashiCorp Vault.
+
+_base: base.yaml
+
+environment: production
+
+pipeline:
+  fail_fast: false
+  stage_timeout_seconds: 20
+
+nlp:
+  use_transformer: true
+  transformer_model: "all-MiniLM-L6-v2"
+  transformer_timeout_seconds: 8.0
+
+alert_routing:
+  slack_webhook_url: ${SLACK_WEBHOOK_URL}       # From environment
+  pagerduty_integration_key: ${PAGERDUTY_KEY}   # From environment
+  oms_alert_endpoint: ${OMS_ALERT_URL}          # From environment
+  email_recipients:
+    - risk@yourfirm.com
+    - pm@yourfirm.com
+
+default_alert_routing:
+  CRITICAL: ["slack", "pagerduty", "oms", "log"]
+  HIGH: ["slack", "oms", "log"]
+  MEDIUM: ["log"]
+  LOW: ["log"]
+
+oms_endpoint: ${OMS_ENDPOINT_URL}               # From environment
+
+logging:
+  level: WARNING
+  format: json
+  audit_log_dir: /var/log/msre/audit
+
+# Production: tighter staleness limits
+data_staleness:
+  equity_minutes: 10
+  yields_minutes: 20
+  credit_minutes: 45
+  volatility_minutes: 20
+
+# Production: stricter pre-trade checks
+pre_trade_checks:
+  max_single_hedge_notional_pct: 0.12
+  max_gross_exposure_reduction_pct: 0.45

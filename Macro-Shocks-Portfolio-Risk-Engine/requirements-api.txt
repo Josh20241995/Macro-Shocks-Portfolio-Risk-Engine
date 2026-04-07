@@ -1,0 +1,15 @@
+# requirements-api.txt
+# Dependencies for running the MSRE REST API server.
+# Install with: pip install -r requirements-api.txt
+# Or include via: pip install -e ".[api]"
+
+-r requirements.txt
+
+# API framework
+fastapi>=0.110
+uvicorn[standard]>=0.27
+httpx>=0.27          # Async HTTP client for downstream calls
+
+# Auth (optional — uncomment for production bearer token auth)
+# python-jose[cryptography]>=3.3
+# passlib[bcrypt]>=1.7

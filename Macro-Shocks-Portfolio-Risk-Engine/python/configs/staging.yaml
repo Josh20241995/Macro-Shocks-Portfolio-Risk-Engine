@@ -1,0 +1,46 @@
+# python/configs/staging.yaml
+# Staging environment: full live feed connections, no OMS write access.
+# Inherits from base.yaml. Used for pre-production validation.
+
+_base: base.yaml
+
+environment: staging
+
+pipeline:
+  fail_fast: false
+  stage_timeout_seconds: 25
+
+nlp:
+  use_transformer: true
+  transformer_model: "all-MiniLM-L6-v2"
+  transformer_timeout_seconds: 10.0
+
+logging:
+  level: INFO
+  format: json
+  audit_log_dir: /var/log/msre/staging/audit
+
+# Staging: Slack routing to a dedicated test channel only
+alert_routing:
+  slack_webhook_url: ${STAGING_SLACK_WEBHOOK_URL}
+  pagerduty_integration_key: null      # No PagerDuty in staging
+  oms_alert_endpoint: null             # No OMS write access in staging
+  email_recipients: []
+
+default_alert_routing:
+  CRITICAL: ["slack", "log"]
+  HIGH: ["slack", "log"]
+  MEDIUM: ["log"]
+  LOW: ["log"]
+
+# Staging: production-equivalent staleness limits
+data_staleness:
+  equity_minutes: 15
+  yields_minutes: 30
+  credit_minutes: 60
+  volatility_minutes: 30
+
+# Staging: slightly looser pre-trade controls than production
+pre_trade_checks:
+  max_single_hedge_notional_pct: 0.15
+  max_gross_exposure_reduction_pct: 0.50

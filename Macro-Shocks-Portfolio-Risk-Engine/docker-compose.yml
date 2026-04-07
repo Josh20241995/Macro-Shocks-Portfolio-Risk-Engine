@@ -1,0 +1,120 @@
+version: "3.9"
+
+# docker-compose.yml
+# Local development infrastructure for the Macro Shock Risk Engine.
+# Provides: TimescaleDB, PostgreSQL, Redis, Elasticsearch.
+# Do NOT use this configuration in production.
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # TimescaleDB — Time-series market data storage
+  # ---------------------------------------------------------------------------
+  timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    container_name: msre_timescaledb
+    environment:
+      POSTGRES_USER: msre
+      POSTGRES_PASSWORD: msre_dev_password
+      POSTGRES_DB: market_data
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+      - ./scripts/init_timescaledb.sql:/docker-entrypoint-initdb.d/01_init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U msre -d market_data"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL — Relational metadata (events, calibration, calendar)
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:15
+    container_name: msre_postgres
+    environment:
+      POSTGRES_USER: msre
+      POSTGRES_PASSWORD: msre_dev_password
+      POSTGRES_DB: msre_meta
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_postgres.sql:/docker-entrypoint-initdb.d/01_init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U msre -d msre_meta"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # Redis — Hot cache for dashboard API and alert state
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: msre_redis
+    ports:
+      - "6379:6379"
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # Elasticsearch — News and transcript search, audit log storage
+  # ---------------------------------------------------------------------------
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: msre_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  # ---------------------------------------------------------------------------
+  # MSRE Pipeline API (optional — for dashboard development)
+  # ---------------------------------------------------------------------------
+  # Uncomment to run the Python API server locally.
+  # Requires: Python image built with: docker build -t msre-pipeline:dev .
+  #
+  # msre_api:
+  #   image: msre-pipeline:dev
+  #   container_name: msre_api
+  #   environment:
+  #     MSRE_ENVIRONMENT: research
+  #     TIMESCALEDB_URL: postgresql://msre:msre_dev_password@timescaledb:5432/market_data
+  #     POSTGRES_URL: postgresql://msre:msre_dev_password@postgres:5432/msre_meta
+  #     REDIS_URL: redis://redis:6379
+  #     ELASTICSEARCH_URL: http://elasticsearch:9200
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     timescaledb:
+  #       condition: service_healthy
+  #     postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   command: uvicorn macro_shock.orchestration.api:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  timescaledb_data:
+  postgres_data:
+  elasticsearch_data:
+
+networks:
+  default:
+    name: msre_network
