@@ -40,8 +40,6 @@ Usage
     # Run with elevated market stress (0.0 = calm, 1.0 = max stress)
     python real_world_scenario_tests.py --stress 0.75
 
-Author:  Josh Ouellette
-License: MIT
 """
 
 from __future__ import annotations
