@@ -416,32 +416,27 @@ Minimum coverage targets: **80% unit, 60% integration**. All risk scoring module
 - Network egress restricted to approved data vendor endpoints in production
 
 ---
+**License **
 
-## Roadmap
+Copyright (c) 2026 Josh20241995. All rights reserved.
 
-### Near-Term (0–3 Months)
-- [ ] Live Bloomberg B-PIPE integration for real-time market context
-- [ ] FinBERT fine-tuning on FOMC transcript corpus
-- [ ] Automated alert routing to Slack/PagerDuty
-- [ ] C# dashboard v1 with live risk heatmap
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-### Medium-Term (3–9 Months)
-- [ ] Multi-central-bank support (ECB, BOJ, BOE)
-- [ ] Geopolitical event detection (UN, G7/G20, conflict news)
-- [ ] Options-surface-implied scenario probabilities
-- [ ] Real-time portfolio integration via FIX protocol
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-### Long-Term (9–18 Months)
-- [ ] Reinforcement learning for dynamic hedge sizing
-- [ ] Cross-institution correlation: Fed + ECB simultaneous actions
-- [ ] Alternative data integration (satellite, positioning, flow data)
-- [ ] Automated regime classification with continuous online learning
-
----
-
-## License and Use
-
-**Proprietary and Confidential.** For authorized internal institutional use only. Not for distribution. Contains unpublished proprietary research methodologies.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
 ---
 
